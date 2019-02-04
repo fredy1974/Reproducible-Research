@@ -1,0 +1,41 @@
+---
+title: "Project_1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+library(ggplot2)
+library(plyr)
+
+activity <- read.csv("activity.csv")
+
+##What is mean total number of steps taken per day?
+#Calculate the total number of steps
+Steps <- tapply(activity$steps, activity$date, sum)
+#Make a histogram of the total number of steps taken each day
+hist(Steps, xlab = "Number Steps", main = "Histogram: Steps")
+#Calculate and report the mean and median of the total number of steps taken per day
+MeanSteps <- mean(Steps, na.rm = TRUE)
+MedianSteps <- median(Steps, na.rm = TRUE)
+
+##What is the average daily activity pattern?
+#Make a time series plot of the 5-minute interval and the average number of steps taken, averaged across all days
+Stepsinterval <- tapply(activity$steps, activity$interval, mean, na.rm = TRUE)
+plot(as.numeric(names(Stepsinterval)), 
+     Stepsinterval, 
+     xlab = "Interval", 
+     ylab = "Steps",
+     col = "red",
+     main = "Average Steps", 
+     type = "l")
+#Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+maxStepsinterval <- sort(activity$interval[which.max(activity$steps)])
+
+##Imputing missing values
+impute <- sum(is.na(activity$steps))
+
